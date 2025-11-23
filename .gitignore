@@ -19,4 +19,4 @@ tmp/
 .env
 config.local.yaml
 
-__debug.*
+__debug*
