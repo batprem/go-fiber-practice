@@ -1,0 +1,21 @@
+# Binaries and build artifacts
+*.exe
+*.bin
+target/
+
+# Dependency directories
+vendor/
+
+# Operating System and Editor specific files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Log files and temporary files
+*.log
+tmp/
+
+# Configuration files with sensitive information
+.env
+config.local.yaml
