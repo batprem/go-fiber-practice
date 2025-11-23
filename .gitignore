@@ -10,7 +10,6 @@ vendor/
 .DS_Store
 Thumbs.db
 .idea/
-.vscode/
 
 # Log files and temporary files
 *.log
@@ -19,3 +18,5 @@ tmp/
 # Configuration files with sensitive information
 .env
 config.local.yaml
+
+__debug.*
