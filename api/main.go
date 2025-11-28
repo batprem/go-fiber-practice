@@ -1,5 +1,16 @@
 package main
 
+// @title GFP API
+// @version 1.0
+// @description Fiber Practice API with OpenTelemetry and Swagger documentation
+// @contact.name API Support
+// @contact.email support@example.com
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+// @host localhost:3002
+// @BasePath /
+// @schemes http
+
 import (
 	"context"
 	"log"
@@ -7,6 +18,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	_ "gfp/api/docs" // Import generated docs
 	otel "gfp/api/middlewares/otel"
 	"gfp/api/routes"
 	"gfp/api/routes/nested"
@@ -14,7 +26,36 @@ import (
 
 	"github.com/gofiber/contrib/otelfiber/v2"
 	"github.com/gofiber/fiber/v2"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 )
+
+// HealthCheck godoc
+// @Summary Health check
+// @Description Returns a simple greeting message
+// @Tags health
+// @Produce plain
+// @Success 200 {string} string "Hello, World!"
+// @Router / [get]
+func HealthCheck(c *fiber.Ctx) error {
+	ctx := c.UserContext()
+	otel.LogInfo(ctx, "Handling root endpoint")
+	return c.SendString("Hello, World!")
+}
+
+// GetUserGreeting godoc
+// @Summary Get user greeting
+// @Description Returns a personalized greeting for the specified user
+// @Tags users
+// @Produce plain
+// @Param user path string true "Username"
+// @Success 200 {string} string "Personalized greeting"
+// @Router /{user} [get]
+func GetUserGreeting(c *fiber.Ctx) error {
+	ctx := c.UserContext()
+	user := c.Params("user")
+	otel.LogInfo(ctx, "Handling user endpoint", "user", user)
+	return c.SendString(lib.GetText(user))
+}
 
 func main() {
 	// Initialize OpenTelemetry
@@ -34,25 +75,12 @@ func main() {
 	// Add OpenTelemetry middleware for automatic tracing
 	app.Use(otelfiber.Middleware())
 
-	// Define routes
-	app.Get(
-		"/",
-		func(c *fiber.Ctx) error {
-			ctx := c.UserContext()
-			otel.LogInfo(ctx, "Handling root endpoint")
-			return c.SendString("Hello, World!")
-		},
-	)
+	// Swagger documentation route
+	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 
-	app.Get(
-		"/:user",
-		func(c *fiber.Ctx) error {
-			ctx := c.UserContext()
-			user := c.Params("user")
-			otel.LogInfo(ctx, "Handling user endpoint", "user", user)
-			return c.SendString(lib.GetText(user))
-		},
-	)
+	// Define routes
+	app.Get("/", HealthCheck)
+	app.Get("/:user", GetUserGreeting)
 
 	app.Get(
 		"simple-return/:user",

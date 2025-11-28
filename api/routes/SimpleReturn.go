@@ -9,6 +9,14 @@ import (
 	"go.opentelemetry.io/otel/codes"
 )
 
+// TextReturn godoc
+// @Summary Simple text return
+// @Description Returns a greeting text for the specified user
+// @Tags users
+// @Produce plain
+// @Param user path string true "Username"
+// @Success 200 {string} string "Greeting text"
+// @Router /simple-return/{user} [get]
 func TextReturn(c *fiber.Ctx) error {
 	// Get context from Fiber
 	ctx := c.UserContext()

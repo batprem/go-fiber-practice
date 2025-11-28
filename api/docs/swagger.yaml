@@ -1,0 +1,99 @@
+basePath: /
+definitions:
+  nested.User:
+    properties:
+      greetingText:
+        example: Hello, alice!
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: alice
+        type: string
+    type: object
+host: localhost:3002
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+  description: Fiber Practice API with OpenTelemetry and Swagger documentation
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: GFP API
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: Returns a simple greeting message
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Hello, World!
+          schema:
+            type: string
+      summary: Health check
+      tags:
+      - health
+  /{user}:
+    get:
+      description: Returns a personalized greeting for the specified user
+      parameters:
+      - description: Username
+        in: path
+        name: user
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Personalized greeting
+          schema:
+            type: string
+      summary: Get user greeting
+      tags:
+      - users
+  /simple-return/{user}:
+    get:
+      description: Returns a greeting text for the specified user
+      parameters:
+      - description: Username
+        in: path
+        name: user
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Greeting text
+          schema:
+            type: string
+      summary: Simple text return
+      tags:
+      - users
+  /simple-return/nested/{user}:
+    get:
+      description: Returns a user object with ID, name, and personalized greeting
+      parameters:
+      - description: Username
+        in: path
+        name: user
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User object with greeting
+          schema:
+            $ref: '#/definitions/nested.User'
+      summary: Nested user return
+      tags:
+      - users
+schemes:
+- http
+swagger: "2.0"

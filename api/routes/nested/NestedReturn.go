@@ -9,12 +9,21 @@ import (
 	"go.opentelemetry.io/otel/codes"
 )
 
+// User represents a user with greeting information
 type User struct {
-	ID           int    `json:"id"`
-	Name         string `json:"name"`
-	GreetingText string `json:"greetingText"`
+	ID           int    `json:"id" example:"1"`
+	Name         string `json:"name" example:"alice"`
+	GreetingText string `json:"greetingText" example:"Hello, alice!"`
 }
 
+// NestedTextReturn godoc
+// @Summary Nested user return
+// @Description Returns a user object with ID, name, and personalized greeting
+// @Tags users
+// @Produce json
+// @Param user path string true "Username"
+// @Success 200 {object} User "User object with greeting"
+// @Router /simple-return/nested/{user} [get]
 func NestedTextReturn(c *fiber.Ctx) error {
 	// Get context from Fiber
 	ctx := c.UserContext()
